@@ -1,0 +1,364 @@
+/* main elements */
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #666;
+	background-color: #fff;
+	text-align: center;
+}
+
+#wrapper {
+	width: 1100px;
+	min-width: 1100px;
+	max-width: 1100px;
+	margin: auto auto 10px auto; /* Centrado horizontal */
+
+	/* fix max-width incompatibility in IE6 */
+	width: expression(document.body.clientWidth > 1100? "1100px": "auto" );
+	
+	text-align: left;
+	display: table;
+}
+
+/************************************** HEADER *****************************************/
+
+#header {
+	width: 1100px;
+	height: 180px;
+	display: table-row table-cell;
+	position: relative;
+	background-color: #F2F2F2;
+	text-align: center;	
+	margin-bottom: 5px;
+}
+
+#header #language {
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+}
+
+/************************************** MENU TOP *****************************************/
+
+#menu_top {
+	width: 1100px;
+	overflow-x: hidden;
+	overflow-y: auto;	/* Hace que se ajuste a la columna más alta en FF */
+	height: 35px;		/* Hace que se ajuste a la columna más alta en IE6 */
+	width: 100%;
+	max-height: 35px;
+	/*display: table;*/
+	border-top: solid 1px;
+	border-bottom: solid 1px;
+	margin-bottom: 10px;
+}
+
+#menu_top #left_side {
+	width: 500px;
+	height: 100%;
+	float: left;
+	font-size: 16px;
+}
+
+#menu_top #left_side ul {
+	list-style: none;
+    overflow: hidden;
+    height: 35px;
+    display: table-row;
+}
+
+#menu_top #left_side ul li {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#menu_top #left_side ul li a {
+	color: #666;
+    text-decoration: none;
+    padding: 5px 20px 5px 20px;
+}
+
+#menu_top #left_side ul li a:hover {
+    background-color: #666;
+    color: #FFF;
+    width: 100%;
+}
+
+#menu_top #right_side {
+	display: table-cell;
+	height: 100%;
+	width: 450px;
+	float: right;
+}
+
+#menu_top #menu_alert {
+	padding: 5px 15px 5px 15px;
+	color: #a94442;
+	background-color: #f2dede;
+	border: 1px solid #ebccd1;
+	border-radius: 4px;
+	margin-right: 20px;
+}
+
+#menu_top #right_side #login {
+	position: relative;
+	float: right;
+}
+
+#menu_top #right_side #login table {
+	border-collapse: collapse;
+	font-size: 9px;
+	float: right;
+	height: 35px;
+}
+
+#menu_top #right_side #login table input {
+	font-size: 9px;
+	display: block;
+}
+
+#menu_top #right_side #login table input[type="text"],
+#menu_top #right_side #login table input[type="password"] {
+	width: 80px;
+}
+
+#menu_top #right_side #login table input[type="submit"] {
+	width: 32px;
+}
+
+#menu_top #right_side ul {
+    list-style: none;
+    overflow: hidden;
+    height: 35px;
+    display: table-row;
+    float: right;
+    margin: 0px;
+}
+
+#menu_top #right_side ul li {
+    display:table-cell;
+    vertical-align: middle;
+    text-align: center;
+    height: 35px;
+}
+
+#menu_top #right_side ul li span,
+#menu_top #right_side ul li a {
+	color: #666;
+    text-decoration: none;
+    padding: 15px 5px 5px 5px;
+}
+
+
+
+
+
+
+
+
+#main {
+	overflow-x: hidden;
+	overflow-y: auto;	/* Hace que se ajuste a la columna más alta en FF */
+	height: 100%;		/* Hace que se ajuste a la columna más alta en IE6 */
+	display: table-row table-cell;
+	min-height: 400px;
+}
+
+/************************************** LEFT COLUMN *****************************************/
+
+#left_column {
+	width: 200px;
+	display: table-cell;
+	vertical-align: top;
+}
+#left_column #menu {
+}
+
+#left_column #menu ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#left_column #menu ul li{
+	padding: 0px;
+}
+
+#left_column #menu .menu_category {
+	font-size: 20px;
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#left_column #menu .menu_item {
+	font-size: 16px;
+	margin-left: 30px;
+}
+
+#left_column #menu a {
+	display: block;
+	color: #666666;
+	text-decoration: none;
+}
+
+#left_column #menu a:hover {
+	color: #648C1D;
+}
+
+/************************************ CENTRAL COLUMN ****************************************/
+
+#central_column {
+	display: table-cell;
+	width: 700px;
+	vertical-align: top;
+}
+
+#central_column #formulario .alert {
+	color: red;
+	margin-bottom: 20px;
+}
+
+#central_column #formulario .alert> .close {
+	display: none;
+}
+
+#central_column #formulario #message {
+	width: 700px;
+}
+
+#central_column #formulario #charNum {
+	width: 30px;
+	text-align: right;
+	border-style: solid;
+	border-width: 1px;
+	float: right;
+}
+
+#central_column #formulario,
+#central_column #filtro {
+	font-size: inherit;
+	font-size: 12px;
+}
+
+#central_column #formulario .row,
+#central_column #filtro .row {
+	margin-bottom: 10px;
+}
+
+#central_column #formulario span,
+#central_column #filtro span {
+	display: inline-block;
+}
+
+#central_column #formulario label,
+#central_column #filtro label {
+	display: block;
+}
+
+#central_column #formulario input,
+#central_column #filtro input {
+	font-size: inherit;
+}
+
+#central_column #formulario input[type="text"],
+#central_column #formulario input[type="email"],
+#central_column #formulario input[type="password"],
+#central_column #filtro input[type="text"],
+#central_column #filtro input[type="email"],
+#central_column #filtro input[type="password"] {
+	width: 100%;
+	height: 20px;
+}
+
+#central_column #formulario select,
+#central_column #filtro select {
+	width: 100%;
+	height: 26px;
+}
+
+#central_column #resultados table {
+	font-size: inherit;
+	width: 100%;
+}
+
+#central_column #resultados table tr th {
+	border: 1px solid gray;
+}
+
+#central_column #paginacion {
+	display: inline-block;
+}
+
+#central_column #paginacion ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e7e7e7;
+}
+
+#central_column #paginacion ul li {
+	float: left;
+	background-color: #F2F2F2;
+}
+
+#central_column #paginacion ul li a {
+    display: block;
+    padding: 8px;
+    color: #666;
+    text-align: center;
+    text-decoration: none;
+}
+
+#central_column #paginacion ul li a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+#central_column #flash_messages_ok {
+	color: green;
+	margin-bottom: 20px;
+}
+
+#central_column #flash_messages_error {
+	color: green;
+	margin-bottom: 20px;
+}
+
+.col_25 {
+	width: 25%;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.col_100 {
+	width: 100%;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+/************************************* RIGHT COLUMN *****************************************/
+
+#right_column {
+	width: 200px;
+	display: table-cell;
+	vertical-align: top;
+}
+
+
+
+.flag {
+	height: 11px;
+	width: 16px;
+}
+
+/************************************* FOOTER *****************************************/
+
+#footer {
+	height: 80px;
+	display: table-row table-cell;
+	background-color: #F2F2F2;
+	text-align: center;
+}

@@ -1,0 +1,66 @@
+<beans:beans 
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+						http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+						http://www.springframework.org/schema/security  
+						http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	<beans:description>
+		Configuration of Security Context.
+	</beans:description>
+
+
+
+	<!-- HTTP security configurations -->
+	<http auto-config="true" use-expressions="true">
+		<form-login login-page="/index" default-target-url="/index" authentication-failure-url="/index?error=true" />
+		
+		<logout logout-success-url="/index" logout-url="/j_spring_security_logout" />
+		
+		<access-denied-handler error-page="/accessDenied" />
+		
+		<intercept-url pattern="/resources/**" access="permitAll" />
+		<intercept-url pattern="/index" access="permitAll" />
+		<intercept-url pattern="/spring" access="permitAll" />
+		<intercept-url pattern="/hibernate" access="permitAll" />
+		<intercept-url pattern="/mysql" access="permitAll" />
+		<intercept-url pattern="/guestbook/create" access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/guestbook/search" access="permitAll" />
+		<intercept-url pattern="/users/**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/pictures" access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/pictures/**" access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/profile/**" access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/author/**" access="permitAll" />
+
+		<csrf disabled="true" />
+	</http>
+
+
+	<!-- <authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="java2blog" password="java123" authorities="ROLE_ADMIN" />
+				<user name="arpit" password="arpit123" authorities="ROLE_ADMIN" />
+				<user name="root" password="password" authorities="ROLE_ADMIN" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager> -->
+	
+	<authentication-manager>
+		<authentication-provider user-service-ref="customUserDetailsService">
+			<password-encoder ref="bcryptEncoder" />
+			<!-- <password-encoder hash="md5" /> -->
+		</authentication-provider>
+	</authentication-manager>
+	
+	<beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<beans:bean id="customUserDetailsService" class="com.jld.base.service.CustomUserDetailsService" />
+	
+	
+	<!-- Enable Spring Method level Security with @PreAuthorize, @PostAuthorize, @Secured and Spring EL expressions -->
+	<!-- <global-method-security secured-annotations="enabled" /> -->
+
+</beans:beans>  

@@ -1,0 +1,58 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
+	<!-- Will be referenced in Spring Context File -->
+	<!-- Persistence with MySQL y Hibernate -->
+	<persistence-unit name="jpa-persistence" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>com.jld.base.model.Usergroup</class>
+		<class>com.jld.base.model.Role</class>
+		<class>com.jld.base.model.User</class>
+		<properties>
+			<property name="hibernate.archive.autodetection" value="class" />
+			<!--<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect" />-->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.show_sql" value="true"/>
+			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
+			<!-- <property name="hibernate.hbm2ddl.auto" value="update" /> -->
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/baseprojectdb"/>
+			<property name="hibernate.connection.username" value="root"/>
+			<property name="hibernate.connection.password" value="password"/>
+		</properties>
+	</persistence-unit>
+	
+	<!-- Persistence with MySQL y eclipselink -->
+	<!-- <persistence-unit name="jpa-persistence" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>com.jld.base.model.Group</class>
+		<class>com.jld.base.model.Role</class>
+		<class>com.jld.base.model.User</class>
+		<class>com.jld.base.model.UserPK</class>
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/baseprojectdb" />
+			<property name="javax.persistence.jdbc.user" value="root" />
+			<property name="javax.persistence.jdbc.password" value="password" />
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.ddl-generation.output-mode" value="database" />
+		</properties>
+	</persistence-unit> -->
+	
+	<!-- With Oracle and Hibernate -->
+	<!-- <persistence-unit name="jpa-persistence">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<property name="hibernate.archive.autodetection" value="class" />
+			<property name="hibernate.dialect" value="com.mysema.query.jpa.support.ExtendedOracleDialect" />
+			<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver" />
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/baseprojectdb" />
+			<property name="hibernate.connection.username" value="root" />
+			<property name="hibernate.connection.password" value="password" />
+			<property name="hibernate.show_sql" value="true"/>
+			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+		</properties>
+	</persistence-unit> -->
+</persistence>

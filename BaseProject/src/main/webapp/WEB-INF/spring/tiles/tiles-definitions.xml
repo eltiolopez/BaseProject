@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC 
+		"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+		"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+
+<tiles-definitions>
+
+	<definition name="main_layout" template="/WEB-INF/views/tiles-layout-templates/main_layout.jsp">
+		<put-attribute name="header"				value="/WEB-INF/views/common/header.jsp" />
+		<put-attribute name="menu_top_bootstrap"	value="/WEB-INF/views/common/menu_top_bootstrap.jsp" />
+		<put-attribute name="menu_top"				value="/WEB-INF/views/common/menu_top.jsp" />
+		<put-attribute name="menu_left_bootstrap"	value="/WEB-INF/views/common/menu_left_bootstrap-sidebar.jsp" />	<!-- Customized Menu for Bootstrap -->
+		<put-attribute name="menu_left"				value="/WEB-INF/views/common/menu_left.jsp" />
+		<put-attribute name="right_column"			value="/WEB-INF/views/common/rightColumn.jsp" />
+		<put-attribute name="footer"				value="/WEB-INF/views/common/footer.jsp" />
+	</definition>
+
+</tiles-definitions>

@@ -1,0 +1,25 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:output omit-xml-declaration="yes"/>
+	
+	<jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
+	<jsp:directive.attribute name="z" type="java.lang.String" required="false" description="Used for checking if element has been modified (to recalculate simply provide empty string value)"/>
+	
+	<c:if test="${empty render or render}">
+	
+		<div class="overlay"><!-- Comment for JSP --></div>
+		<nav id="left_column" class="col-xs-left col-sm-left col-md-left col-lg-left sidebar navbar-inverse" role="navigation">	<!-- col-left -->
+			<div>
+				<button type="button" class="hamburger is-closed" data-toggle="offcanvas">
+					<span class="hamb-top"><!-- Comment for JSP --></span>
+					<span class="hamb-middle"><!-- Comment for JSP --></span>
+					<span class="hamb-bottom"><!-- Comment for JSP --></span>
+				</button>
+			</div>
+			<!-- Sidebar Links -->
+			<ul class="nav sidebar-nav">
+				<jsp:doBody />
+			</ul>
+		</nav>
+	
+	</c:if>
+</jsp:root>

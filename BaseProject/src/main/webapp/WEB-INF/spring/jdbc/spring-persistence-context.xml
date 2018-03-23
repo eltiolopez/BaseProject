@@ -1,0 +1,139 @@
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-4.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<description>
+		Configuration of Persistence Context.
+	</description>
+
+
+
+	<!-- This will automatically locate any and all property files you have within your classpath, provided they fall -->
+	<!-- under the META-INF/spring directory. The located property files are parsed and their values can then be used -->
+	<!-- within application context files in the form of ${propertyKey}. -->
+    <context:property-placeholder location="classpath:persistence-mysql.properties"/>
+    
+    <context:component-scan base-package="com.jld.base.service" />	<!-- This scan must be done here to make Spring takes both @Service and @Transaction annotations -->
+    <context:component-scan base-package="com.jld.base.dao" />
+	
+	
+	
+    <!-- Necessary to get the entity manager injected into the factory bean -->
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />   
+    
+ 
+    <!-- Define Hibernate JPA Vendor Adapter -->
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+
+    </bean>
+    
+    <!-- DataBase connection parameters -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.pass}"/>
+        <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+        <property name="testOnReturn" value="${jdbc.testOnReturn}"/>
+        <property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <property name="numTestsPerEvictionRun" value="${jdbc.numTestsPerEvictionRun}"/>
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+        <property name="validationQuery" value="${jdbc.validationQuery}"/>
+    </bean>
+ 
+    <!-- Entity Manager Factory -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan">
+			<array>
+				<value>com.jld.base.model</value>
+			</array>
+		</property>
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.hdb2dll.auto">${hibernate.hdb2dll.auto}</prop>
+			</props>
+		</property>
+	</bean>
+ 
+    <!-- Transaction Manager -->
+    <!-- The transaction manager can be DataSourceTransactionManager, HibernateTransactionManager or JpaTransactionManager -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+ 
+ 
+    <!-- Detect @Transactional -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+		
+	
+	
+	
+    
+    <!-- ********************************************************************************************************************* -->
+    <!-- *** CONFIGURACIÓN ALTERNATIVA CON persistence.xml *** -->
+    <!-- Si se quiere utilizar el fichero persistence.xml para indicar a JPA las clases que mapean el modelo (Base de Datos) -->
+    <!-- en lugar de utilizar Spring, que las descubre automáticamente por medio de la propiedad 'packagesToScan' -->
+    <!-- del bean LocalContainerEntityManagerFactoryBean y de la etiqueta @Entity -->
+    
+    <!-- *** ALTERNATIVE CONFIGURATION WITH persistence.xml *** -->
+    <!-- If you want to use the file persistence.xml to indicate JPA the classes that map the model (DataBase) -->
+    <!-- instead of using Spring, that find them out automatically by the property 'packagesToScan' -->
+    <!-- of bean LocalContainerEntityManagerFactoryBean and the label @Entity -->
+    
+    <!-- Define Hibernate JPA Vendor Adapter -->
+    <!-- <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
+        <property name="showSql" value="true" />
+    </bean> -->
+    
+    <!-- <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    	<property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
+        <property name="persistenceUnitName" value="jpa-persistence" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+    </bean> -->
+    
+    <!-- Transaction Manager -->
+    <!-- <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean> -->
+ 
+    <!-- Detect @Transactional -->
+    <!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+    <!-- ********************************************************************************************************************* -->
+    
+    
+    
+    <!-- ********************************************************************************************************************* -->
+    <!-- *** DIFERENTES FORMAS DE DEFINIR EL transactionManager *** -->
+    <!-- Se puede configurar el transactionManager para que utilice uno de los siguientes frameworks: DataSource, Hibernate o JPA -->
+    
+    <!-- *** DIFFERENT WAYS TO DEFINE THE transactionManager *** -->
+    <!-- The transacionManager can be configured to use one of these frameworks: DataSource, Hibernate or JPA -->
+    
+    <!-- <bean id="transacionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="datasource" />
+	</bean>
+	
+	<bean id="transacionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="transacionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean> -->
+    <!-- ********************************************************************************************************************* -->
+	
+</beans>

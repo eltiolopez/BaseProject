@@ -1,0 +1,90 @@
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-4.0.xsd
+						http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<description>
+		Configuration of Servlets Context.
+	</description>
+
+
+ 
+ 	<!-- Declares explicit support for annotation-driven MVC controllers (i.e. @RequestMapping, @Controller, ) -->
+ 	<!-- as well as adding support for declarative validation via @Valid and message body marshalling with @RequestBody/ResponseBody -->
+	<mvc:annotation-driven />
+	
+	<!-- Configures a handler for serving static resources as images, css, js, under the path /resources -->
+	<mvc:resources mapping="/resources/**" location="/" cache-period="10000" />
+	
+	<!-- This will automatically locate any and all property files you have within your classpath, provided they fall -->
+	<!-- under the META-INF/spring directory. The located property files are parsed and their values can then be used -->
+	<!-- within application context files in the form of ${propertyKey}. -->
+    <context:property-placeholder location="classpath:baseproject.properties"/>
+	
+	
+	<!-- Scans the package for annotated components that will be auto-registered as Spring beans.  -->
+	<!-- By default, the Spring-provided @Component, @Repository, @Service, and @Controller stereotypes will be detected. -->
+	<!-- Note: This tag implies the effects of the 'annotation-config' tag, activating @Required, @Autowired, @PostConstruct, -->
+	<!-- @PreDestroy, @Resource, @PersistenceContext and @PersistenceUnit annotations in the component classes -->
+	<context:component-scan base-package="com.jld.base.controller" />
+	<!-- <context:component-scan base-package="com.jld.base.service" /> -->
+	<context:component-scan base-package="com.jld.base.validator" />
+	<context:component-scan base-package="com.jld.base.exception" />
+	<!-- <context:component-scan base-package="com.jld.base.dao" /> -->
+	
+	
+	<!-- Register "global" interceptor beans to apply to all registered HandlerMappings -->
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" p:paramName="theme"/>	<!-- Theme interceptor (CSS change) - Not used -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" p:paramName="lang"/>	<!-- Locale interceptor (Language change) -->
+		<bean class="com.jld.base.handler.CustomizedGlobalRequestInterceptor"/>		<!-- Customized interceptor, for logging and future uses -->
+	</mvc:interceptors>
+	
+
+	<!-- Tiles configuration -->
+	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+	</bean>
+	
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/spring/tiles/tiles-definitions.xml</value>
+				<!-- Scan views directory for Tiles configurations -->
+				<value>/WEB-INF/views/**/views.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!-- Resolves localized messages*.properties and application*.properties files in the application to allow for internationalization. -->
+    <!-- The messages*.properties files translate general messages which are part of the admin interface, the application*.properties resource -->
+    <!-- bundle localizes all application specific messages such as entity names and menu items. -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    	<property name="fileEncodings" value="UTF-8" />
+    	<property name="defaultEncoding" value="UTF-8"/>
+    	<property name="fallbackToSystemLocale" value="false"/>
+    	<property name="basenames">
+    		<list>
+	    		<value>/WEB-INF/i18n/messages</value>
+	    		<value>/WEB-INF/i18n/application</value>
+    		</list>
+    	</property>
+    </bean>
+    
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
+    
+    <!-- store preferred language configuration in a cookie -->
+    <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver" id="localeResolver" p:cookieName="locale" />
+    
+    <!-- Store preferred theme configuration in a cookie -->
+    <bean class="org.springframework.web.servlet.theme.CookieThemeResolver" id="themeResolver" p:cookieName="theme" p:defaultThemeName="default" />
+</beans>
