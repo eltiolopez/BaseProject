@@ -97,34 +97,41 @@
 			    
 			    
 			    <script>
-				    $(document).ready(function () {
-				    	  var trigger = $('.hamburger'),
-				    	      overlay = $('.overlay'),
-				    	     isClosed = false;
-	
-				    	    trigger.click(function () {
-				    	      hamburger_cross();      
-				    	    });
-	
-				    	    function hamburger_cross() {
-	
-				    	      if (isClosed == true) {          
-				    	        overlay.hide();
-				    	        trigger.removeClass('is-open');
-				    	        trigger.addClass('is-closed');
-				    	        isClosed = false;
-				    	      } else {   
-				    	        overlay.show();
-				    	        trigger.removeClass('is-closed');
-				    	        trigger.addClass('is-open');
-				    	        isClosed = true;
-				    	      }
-				    	  }
-				    	  
-				    	  $('[data-toggle="offcanvas"]').click(function () {
-				    	        $('#main_row').toggleClass('toggled');
-				    	  });  
-				    	});
+					$(document).ready(function () {
+						var trigger = $('.hamburger'),
+							overlay = $('.overlay'),
+						isClosed = false;
+						
+						trigger.click(function () {
+							hamburger_cross();      
+						});
+						
+						function hamburger_cross() {
+							if (isClosed == true) {          
+								overlay.hide();
+								trigger.removeClass('is-open');
+								trigger.addClass('is-closed');
+								isClosed = false;
+							} else {   
+								overlay.show();
+								trigger.removeClass('is-closed');
+								trigger.addClass('is-open');
+								isClosed = true;
+							}
+						}
+						  
+						$('[data-toggle="offcanvas"]').click(function () {
+							$('#main_row').toggleClass('toggled');
+						});  
+					});
+					
+					
+					/* Functions for Bootstrap confirmation Modal */
+					$('#confirm-delete').on('show.bs.modal', function(e) {
+			            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+			            
+			            $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
+			        });
 			    </script>
 			</c:when>
 			<c:otherwise>

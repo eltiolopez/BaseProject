@@ -12,34 +12,49 @@
 	<h4><spring:message code="message.pictures.portfolio.subtitle" htmlEscape="false" /></h4>
 
 	<div id="formulario">
-		<spring:url var="form_url" value="/pictures/add" />
-		<form:form method="POST" action="${form_url}" modelAttribute="pictureAddForm" commandName="pictureAddForm" enctype="multipart/form-data" class="form-group">
+		<c:if test="${optionSelectOnly}">
+			<spring:url var="form_url" value="/pictures/add" />
+			<c:set var="formMethod" value="GET" />
+		</c:if>
+		<c:if test="${optionCanAdd}">
+			<spring:url var="form_url" value="/pictures/add" />
+			<c:set var="formMethod" value="POST" />
+		</c:if>
+		<form:form method="${formMethod}" action="${form_url}" modelAttribute="pictureAddForm" commandName="pictureAddForm" enctype="multipart/form-data" class="form-group">
 		
 			<c:choose>
 			    <c:when test="${resultAndMetainfo!=null && resultAndMetainfo.listaResultados!=null && fn:length(resultAndMetainfo.listaResultados)>0}">
-			    	<gallery:gallery items="${resultAndMetainfo.listaResultados}" numColumns="4" render="true" />
+			    	<c:if test="${optionSelectOnly}">
+			    		<gallery:gallery items="${resultAndMetainfo.listaResultados}" numColumns="4" form="pictureAddForm" render="true" />
+			    	</c:if>
+			    	<c:if test="${optionCanAdd}">
+			    		<gallery:gallery items="${resultAndMetainfo.listaResultados}" numColumns="4" render="true" />
+			    	</c:if>
 			    </c:when>
 			    <c:otherwise>
 			        <spring:message code="message.common.results.noresults" htmlEscape="false" />
 			    </c:otherwise>
 			</c:choose>
-		
-			<div class="row">
-				<span class="col_100 col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
-					<form:label class="control-label" path="files">File Input 1</form:label>
-					<form:input path="files" id="files" type="file" accept="video/*,  video/x-m4v, video/webm, video/x-ms-wmv, video/x-msvideo, video/3gpp, video/flv, video/x-flv, video/mp4, video/quicktime, video/mpeg, video/ogv, .ts, .mkv, image/*" />
-				</span>
-			</div>
 			
-			<div class="row">
-				<span class="col_100 col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
-					<spring:message var="msgClear" code="message.common.button.clear" htmlEscape="false" />
-					<input type="button" class="btn btn-default btn-sm" value="${msgClear}" />
-					
-					<spring:message var="msgSubmit" code="message.common.button.save" htmlEscape="false" />
-					<input type="submit" class="btn btn-default btn-sm" value="${msgSubmit}" />
-				</span>
-			</div>
+			<c:if test="${optionCanAdd}">		
+				<div class="row">
+					<span class="col_100 col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+						<form:label class="control-label" path="files">File Input 1</form:label>
+						<form:input path="files" id="files" type="file" accept="video/*,  video/x-m4v, video/webm, video/x-ms-wmv, video/x-msvideo, video/3gpp, video/flv, video/x-flv, video/mp4, video/quicktime, video/mpeg, video/ogv, .ts, .mkv, image/*" />
+					</span>
+				</div>
+				
+				<div class="row">
+					<span class="col_100 col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+						<spring:message var="msgClear" code="message.common.button.clear" htmlEscape="false" />
+						<input type="button" class="btn btn-default btn-sm" value="${msgClear}" />
+						
+						<spring:message var="msgSubmit" code="message.common.button.save" htmlEscape="false" />
+						<input type="submit" class="btn btn-default btn-sm" value="${msgSubmit}" />
+					</span>
+				</div>
+			</c:if>
+			
 		</form:form>
 	</div>
 

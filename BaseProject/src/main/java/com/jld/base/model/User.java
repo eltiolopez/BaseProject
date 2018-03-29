@@ -39,11 +39,11 @@ public class User implements Serializable {
 	private String username;
 
 	//bi-directional many-to-one association to Guestbook
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", cascade=CascadeType.REMOVE)
 	private List<Guestbook> guestbooks;
 
 	//bi-directional many-to-one association to Picture
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", cascade=CascadeType.REMOVE)
 	private List<Picture> pictures;
 
 	//bi-directional many-to-one association to Usergroup

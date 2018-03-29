@@ -12,14 +12,15 @@
 	<h2><spring:message code="message.users.search.title" htmlEscape="false" /></h2>
 
 	<c:if test="${createOk or updateOk or deleteOk}">
-		<div>
-			<table id="flash_messages_ok">
-				<tr>
-					<c:if test="${createOk}"><td><spring:message code="message.users.search.info.createok" htmlEscape="false" /></td></c:if>
-					<c:if test="${updateOk}"><td><spring:message code="message.users.search.info.updateok" htmlEscape="false" /></td></c:if>
-					<c:if test="${deleteOk}"><td><spring:message code="message.users.search.info.deleteok" htmlEscape="false" /></td></c:if>
-				</tr>
-			</table>
+		<div class="row">
+			<div class='alert alert-success alert-dismissable fade in' role="alert">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+				<span id="flash_messages_ok" class="error">
+					<c:if test="${createOk}"><spring:message code="message.users.search.info.createok" htmlEscape="false" /></c:if>
+					<c:if test="${updateOk}"><spring:message code="message.users.search.info.updateok" htmlEscape="false" /></c:if>
+					<c:if test="${deleteOk}"><spring:message code="message.users.search.info.deleteok" htmlEscape="false" /></c:if>
+				</span>
+			</div>
 		</div>
 	</c:if>
 	<c:if test="${createError or updateError or deleteError}">
@@ -69,7 +70,7 @@
 					<input type="button" class="btn btn-default btn-sm" value="${msgClear}" />
 					
 					<spring:message var="msgSearch" code="message.common.button.search" htmlEscape="false" />
-					<input type="submit" class="btn btn-default btn-sm" value="${msgSearch}" />
+					<input type="submit" class="btn btn-default btn-sm" value="${msgSearch}" onclick="javascript:document.getElementById('page').value=1;" />
 				</span>
 			</div>
 
@@ -115,10 +116,10 @@
 										<spring:url var="remove_url" value="delete">
 											<baseproject:encryptedparam name="userid" value="${user.iduser}" />	
 										</spring:url>
-										<a href="${remove_url}" style="text-decoration: none">
+   										<a href="#" style="text-decoration: none" data-href="${remove_url}" data-toggle="modal" data-target="#confirm-delete">
 											<spring:url var="imgRemove" value="/resources/images/trash_small.png" />
 											<img class="option" src="${imgRemove}" alt="Remove" />
-										</a>
+   										</a>
 									</td>
 								</tr>
 							</c:forEach>
@@ -139,3 +140,38 @@
 
 	<br />
 </div>
+
+
+
+
+
+
+<style>
+	.modal {
+	   top: 50px;
+	   z-index: 10000;
+	}
+</style>
+
+
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+			</div>
+			<div class="modal-body">
+				<p>The user will be permanently removed.</p>
+				<p>Do you want to proceed?</p>
+				<p class="debug-url"/>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<a class="btn btn-danger btn-ok" role="button">Delete</a>
+			</div>
+		</div>
+	</div>
+</div>
+

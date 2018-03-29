@@ -6,13 +6,13 @@
 <!-- <div id="central_column" xmlns:jsp="http://java.sun.com/JSP/Page"> -->
 <div id="central_column" class="col-lg-middle col-md-middle col-sm-middle col-xs-middle" xmlns:jsp="http://java.sun.com/JSP/Page">
 
-	<h2><spring:message code="message.users.profile.title" htmlEscape="false" /></h2>
+	<h2><spring:message code="message.dashboard.profile.title" htmlEscape="false" /></h2>
 			
-	<h4><spring:message code="message.users.profile.subtitle" htmlEscape="false" /></h4>
+	<h4><spring:message code="message.dashboard.profile.subtitle" htmlEscape="false" /></h4>
 	
 
 	<div id="formulario">
-		<spring:url var="form_url" value="/users/profile/${userName}" />
+		<spring:url var="form_url" value="/${userName}/profile" />
 		<form:form method="POST" action="${form_url}" modelAttribute="userProfileForm" commandName="userProfileForm" class="form-horizontal">
 			<c:if test="${hasValidationErrors}">
 				<div class="row">
@@ -28,16 +28,17 @@
 			</c:if>
 
 			<div class="form-group">
-				<spring:message var="msgPicture" code="message.users.profile.form.picture" htmlEscape="false" />
+				<spring:url var="select_img_url" value="/${userName}/images" />
+				<spring:message var="msgPicture" code="message.dashboard.profile.form.picture" htmlEscape="false" />
 				<form:label class="col-sm-4 control-label" path="imageUrl"><c:out value="${msgPicture}" /></form:label>
 				<div class="col-sm-4">
 					<spring:url var="img" value="/pictures/${userProfileForm.imageUrl}" />
-					<a href="#" role="button" aria-haspopup="true" aria-expanded="false"><img src="${fn:escapeXml(img)}" class="img-thumbnail img-responsive" alt="Image" width="160" height="160"/></a>
+					<a href="${select_img_url}" role="button" aria-haspopup="true" aria-expanded="false"><img src="${fn:escapeXml(img)}" class="img-thumbnail img-responsive" alt="Image" width="160" height="160"/></a>
 				</div>
 			</div>
 			
 			<div class="form-group">
-				<spring:message var="msgUsername" code="message.users.profile.form.username" htmlEscape="false" />
+				<spring:message var="msgUsername" code="message.dashboard.profile.form.username" htmlEscape="false" />
 				<form:label class="col-sm-4 control-label" path="username"><c:out value="${msgUsername}" /></form:label>
 				<div class="col-sm-4">
 					<form:input class="form-control input-sm" path="username" placeholder="${msgUsername}" />
@@ -45,7 +46,7 @@
 			</div>
 			
 			<div class="form-group">
-				<spring:message var="msgEmail" code="message.users.profile.form.email" htmlEscape="false" />
+				<spring:message var="msgEmail" code="message.dashboard.profile.form.email" htmlEscape="false" />
 				<form:label class="col-sm-4 control-label" path="email"><c:out value="${msgEmail}" /></form:label>
 				<div class="col-sm-4">
 					<form:input type="email" class="form-control input-sm" path="email" placeholder="${msgEmail}" />
@@ -53,7 +54,7 @@
 			</div>
 			
 			<div class="form-group">
-				<spring:message var="msgName" code="message.users.profile.form.name" htmlEscape="false" />
+				<spring:message var="msgName" code="message.dashboard.profile.form.name" htmlEscape="false" />
 				<form:label class="col-sm-4 control-label" path="name"><c:out value="${msgName}" /></form:label>
 				<div class="col-sm-4">
 					<form:input class="form-control input-sm" path="name" placeholder="${msgName}" />
@@ -61,7 +62,7 @@
 			</div>
 			
 			<div class="form-group">
-				<spring:message var="msgSurname1" code="message.users.profile.form.surname1" htmlEscape="false" />
+				<spring:message var="msgSurname1" code="message.dashboard.profile.form.surname1" htmlEscape="false" />
 				<form:label class="col-sm-4 control-label" path="surname1"><c:out value="${msgSurname1}" /></form:label>
 				<div class="col-sm-4">
 					<form:input class="form-control input-sm" path="surname1" placeholder="${msgSurname1}" />
@@ -69,7 +70,7 @@
 			</div>
 			
 			<div class="form-group">
-				<spring:message var="msgSurname2" code="message.users.profile.form.surname2" htmlEscape="false" />
+				<spring:message var="msgSurname2" code="message.dashboard.profile.form.surname2" htmlEscape="false" />
 				<form:label class="col-sm-4 control-label" path="surname2"><c:out value="${msgSurname2}" /></form:label>
 				<div class="col-sm-4">
 					<form:input class="form-control input-sm" path="surname2" placeholder="${msgSurname2}" />

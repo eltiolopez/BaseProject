@@ -97,15 +97,15 @@
         					<li><a href="#" class="text-username">${userName}</a></li>
         					<li role="separator" class="divider"></li>
         					<li>
-        						<spring:url var="profile_link" value="/profile/${userName}" />
+        						<spring:url var="profile_link" value="/${userName}/profile" />
         						<a href="${profile_link}"><span class="glyphicon glyphicon-user"><!-- Para cerrar la etiqueta --></span> <spring:message code="global.profile" /></a>
         					</li>
         					<li>
-        						<spring:url var="settings_link" value="/users/settings" />
+        						<spring:url var="settings_link" value="/${userName}/settings" />
         						<a href="${settings_link}"><span class="glyphicon glyphicon-cog"><!-- Para cerrar la etiqueta --></span> <spring:message code="global.preferences" /></a>
         					</li>
         					<li>
-        						<spring:url var="stats_link" value="/users/statistics" />
+        						<spring:url var="stats_link" value="/${userName}/statistics" />
         						<a href="${stats_link}"><span class="glyphicon glyphicon-stats"><!-- Para cerrar la etiqueta --></span> <spring:message code="global.statistics" /></a>
         					</li>
         					<li role="separator" class="divider"/>

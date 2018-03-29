@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import com.jld.base.dao.PictureDao;
 import com.jld.base.dao.UserDao;
 import com.jld.base.dao.UsergroupDao;
 import com.jld.base.dao.UserpreferenceDao;
+import com.jld.base.exception.EntityNotFoundException;
 import com.jld.base.form.UserCreateForm;
 import com.jld.base.form.UserSearchForm;
 import com.jld.base.model.Picture;
@@ -28,7 +30,6 @@ import com.jld.base.model.vo.ModelAttribute;
 import com.jld.base.model.vo.ModelFilter;
 import com.jld.base.pagination.PaginationConfiguration;
 import com.jld.base.pagination.PaginationResultInfo;
-import com.jld.base.pojo.UserDescription;
 
 @Service
 @Transactional
@@ -166,46 +167,34 @@ public class UserService {
 	}
 	
 	@Transactional
-	public void deleteUserById(Integer idUser) throws Exception {
+	public void deleteUserById(String baseRepositoryPath,Integer idUser) throws Exception {
 		try {
-			userDao.deleteById(idUser);
+			User user = userDao.findOne(idUser);
+			if(user == null) {
+				// TODO: Error - User not found.
+				throw new EntityNotFoundException("ERROR_ITEM_NOT_FOUND", "ERROR_ITEM_NOT_FOUND");
+			}
+			
+			// Personal directory path:
+			String personalDir = "";
+			if(user.getUserpreferences() != null && user.getUserpreferences().size() > 0) {
+				personalDir = user.getUserpreferences().get(0).getRepositorypath();
+			}
+			
+			// Delete user:
+			userDao.delete(user);
+						
+			// Delete user personal repository path:
+			if(StringUtils.isEmpty(personalDir)) {
+				File directory = new File(baseRepositoryPath + File.separator + personalDir);
+				if(directory.exists()) {
+					FileUtils.deleteDirectory(directory);
+				}
+			}
+			
 		} catch(Exception e) {
 			throw e;
 		}
-	}
-
-	public UserDescription getUserInfoByUsername(String userName) {
-
-		UserDescription userDescription = new UserDescription();
-		
-		User user = userDao.findUserByField("username", userName);
-		
-		if(user != null) {			
-			userDescription.setEmail(user.getEmail());
-			userDescription.setName(user.getName());
-			userDescription.setSurname1(user.getSurname1());
-			userDescription.setSurname2(user.getSurname2());
-			userDescription.setGroup(user.getUsergroup().getIdusergroup());
-			userDescription.setGroupStr(user.getUsergroup().getGroupname());
-			userDescription.setUserid(user.getIduser());
-			userDescription.setUsername(user.getUsername());
-
-			ModelFilter modelFilter = new ModelFilter();
-			modelFilter.getAttributes().add(new ModelAttribute("user.username", userName, Constants.MODEL_OPERATION_EQUAL));
-			Userpreference userPreferences = userpreferenceDao.findUserpreference(userName);
-			if(userPreferences.getPicture() != null && StringUtils.isNotEmpty(userPreferences.getPicture().getFilekey())) {
-				userDescription.setProfilePicture(userPreferences.getPicture().getFilekey() + "." + userPreferences.getPicture().getFileextension());
-			}
-			/*List<Picture> listProfilePicture = pictureDao.findPicture(modelFilter);
-			if(listProfilePicture != null && listProfilePicture.size() > 0) {
-				userDescription.setProfilePicture(listProfilePicture.get(0).getFilekey() + "." + listProfilePicture.get(0).getFileextension());
-			}
-			else {
-				userDescription.setProfilePicture("bp" + File.separator + "anonymous-user.png");
-			}*/
-		}
-		
-		return userDescription;
 	}
 
 	public UserPreferences getUserPreferences(String userName) {

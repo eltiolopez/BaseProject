@@ -5,6 +5,7 @@
 
 <jsp:directive.attribute name="items" type="java.util.List" required="true" rtexprvalue="true" description="The list of elements to be shown" />
 <jsp:directive.attribute name="numColumns" type="java.lang.Integer" required="true" rtexprvalue="true" description="Number of columns in each row" />
+<jsp:directive.attribute name="form" type="java.lang.String" required="false" rtexprvalue="true" description="The name of the form to be sumbitted" />
 <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
 
 
@@ -27,10 +28,18 @@
     	<c:forEach begin="1" end="${calculatedColumns}" varStatus="cols">
     		<c:set var="img" value="${resultAndMetainfo.listaResultados[counter]}" />
     		<div class="col-xs-3 col-md-3">
-				<a href="#" class="thumbnail">
-					<spring:url var="imgPath" value="/pictures/${img.filekey}.${img.fileextension}" />
-					<img src="${imgPath}" alt="no-image"/>
-				</a>
+    			<spring:url var="imgPath" value="/pictures/${img.filekey}.${img.fileextension}" />
+    			<c:if test="${empty form}">
+					<a href="#" class="thumbnail">
+						<img src="${imgPath}" alt="no-image" />
+					</a>
+				</c:if>
+				<c:if test="${not empty form}">
+					<spring:url var="submitPicture" value="/${userName}/profile?profilePicture=${img.filekey}.${img.fileextension}" />
+					<a href="${submitPicture}" class="thumbnail">
+						<img src="${imgPath}" alt="no-image"/>
+					</a>
+				</c:if>
 			</div>
     		<c:set var="counter" value="${counter + 1}" />
     	</c:forEach>

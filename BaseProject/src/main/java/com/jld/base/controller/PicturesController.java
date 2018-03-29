@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jld.base.form.PictureAddForm;
 import com.jld.base.model.Picture;
-import com.jld.base.pagination.PaginationConfiguration;
 import com.jld.base.pagination.PaginationResultInfo;
 import com.jld.base.pojo.FileDescription;
 import com.jld.base.service.PictureService;
@@ -58,6 +57,7 @@ public class PicturesController {
 		form.setCurrentPage(form.getPage());
 		
 		mav.addObject("pictureAddForm", form);
+		mav.addObject("optionCanAdd", true);
 		
 		// List of messages:
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -16,16 +16,5 @@
 	<definition extends="main_layout" name="users/details">
         <put-attribute name="body" value="/WEB-INF/views/users/details.jsp"/>
     </definition>
-    
-	<definition extends="main_layout" name="users/profile">
-        <put-attribute name="body" value="/WEB-INF/views/users/profile.jsp"/>
-    </definition>
-    
-	<definition extends="main_layout" name="users/settings">
-        <put-attribute name="body" value="/WEB-INF/views/users/settings.jsp"/>
-    </definition>
-    
-	<definition extends="main_layout" name="users/statistics">
-        <put-attribute name="body" value="/WEB-INF/views/users/statistics.jsp"/>
-    </definition>
+
 </tiles-definitions>

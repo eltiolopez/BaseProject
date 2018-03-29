@@ -27,7 +27,7 @@
 		  	<div class="row">
 				<span class="col_100 col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
 					<spring:message var="msgSearch" code="message.common.button.search" htmlEscape="false" />
-					<input type="submit" class="btn btn-default btn-sm" value="${msgSearch}" />
+					<input type="submit" class="btn btn-default btn-sm" value="${msgSearch}" onclick="javascript:document.getElementById('page').value=1;" />
 				</span>
 			</div>
 			

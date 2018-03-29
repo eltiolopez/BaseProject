@@ -6,9 +6,9 @@
 <!-- <div id="central_column" xmlns:jsp="http://java.sun.com/JSP/Page"> -->
 <div id="central_column" class="col-lg-middle col-md-middle col-sm-middle col-xs-middle" xmlns:jsp="http://java.sun.com/JSP/Page">
 
-	<h2><spring:message code="message.users.settings.title" htmlEscape="false" /></h2>
+	<h2><spring:message code="message.dashboard.settings.title" htmlEscape="false" /></h2>
 			
-	<h4><spring:message code="message.users.settings.subtitle" htmlEscape="false" /></h4>
+	<h4><spring:message code="message.dashboard.settings.subtitle" htmlEscape="false" /></h4>
 
 
 </div>

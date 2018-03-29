@@ -18,11 +18,7 @@
 				<div class="row">
 					<div class='alert alert-danger alert-dismissable fade in' role="alert">
 						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-						<form:errors path="username" cssClass="error"/><br/>
-						<form:errors path="email" cssClass="error"/><br/>
-						<form:errors path="group" cssClass="error"/><br/>
-						<form:errors path="password1" cssClass="error"/><br/>
-						<form:errors path="password2" cssClass="error"/><br/>
+						<form:errors path="*" cssClass="error"/>
 					</div>
 				</div>
 			</c:if>

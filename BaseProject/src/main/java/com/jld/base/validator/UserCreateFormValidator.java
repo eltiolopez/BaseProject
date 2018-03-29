@@ -50,7 +50,7 @@ public class UserCreateFormValidator implements Validator {
 		
 		// Validation of field 'Email':
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "validation.email.isEmpty");
-		if(!pattern.matcher(form.getEmail()).matches()) {
+		if(errors.getFieldErrorCount("email") == 0 && !pattern.matcher(form.getEmail()).matches()) {
 			errors.rejectValue("email", "validation.email.noPattern");
 		}
 		else if(userDao.countUserByField("email", form.getEmail()) > 0) {
