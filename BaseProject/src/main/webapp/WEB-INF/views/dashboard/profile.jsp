@@ -18,11 +18,17 @@
 				<div class="row">
 					<div class='alert alert-danger alert-dismissable fade in' role="alert">
 						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-						<form:errors path="username" cssClass="error"/><br/>
-						<form:errors path="email" cssClass="error"/><br/>
-						<form:errors path="group" cssClass="error"/><br/>
-						<form:errors path="password1" cssClass="error"/><br/>
-						<form:errors path="password2" cssClass="error"/><br/>
+						<form:errors path="*" cssClass="error"/>
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${updateOk}">
+				<div class="row">
+					<div class='alert alert-success alert-dismissable fade in' role="alert">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+						<span id="flash_messages_ok" class="error">
+							<c:if test="${updateOk}"><spring:message code="message.users.search.info.updateok" htmlEscape="false" /></c:if>
+						</span>
 					</div>
 				</div>
 			</c:if>
@@ -32,8 +38,17 @@
 				<spring:message var="msgPicture" code="message.dashboard.profile.form.picture" htmlEscape="false" />
 				<form:label class="col-sm-4 control-label" path="imageUrl"><c:out value="${msgPicture}" /></form:label>
 				<div class="col-sm-4">
-					<spring:url var="img" value="/pictures/${userProfileForm.imageUrl}" />
+					<c:choose>
+						<c:when test="${not empty userProfileForm.imageUrl}">
+							<spring:url var="img" value="/pictures/${userProfileForm.imageUrl}" />
+						</c:when>
+						<c:otherwise>
+							<spring:url var="img" value="/resources/images/anonymous-user.png" />
+						</c:otherwise>
+					</c:choose>
+					
 					<a href="${select_img_url}" role="button" aria-haspopup="true" aria-expanded="false"><img src="${fn:escapeXml(img)}" class="img-thumbnail img-responsive" alt="Image" width="160" height="160"/></a>
+ 					<form:hidden path="imageUrl" />
 				</div>
 			</div>
 			

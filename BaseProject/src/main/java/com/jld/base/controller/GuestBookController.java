@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jld.base.form.GuestBookCreateForm;
 import com.jld.base.form.GuestBookSearchForm;
 import com.jld.base.model.Guestbook;
-import com.jld.base.pagination.PaginationConfiguration;
 import com.jld.base.pagination.PaginationResultInfo;
 import com.jld.base.service.GuestBookService;
 import com.jld.base.validator.GuestBookCreateFormValidator;

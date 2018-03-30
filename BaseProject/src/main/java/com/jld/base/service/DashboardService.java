@@ -1,5 +1,7 @@
 package com.jld.base.service;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jld.base.core.utils.Constants;
 import com.jld.base.dao.UserDao;
 import com.jld.base.dao.UserpreferenceDao;
+import com.jld.base.form.UserProfileForm;
+import com.jld.base.model.Picture;
 import com.jld.base.model.User;
 import com.jld.base.model.Userpreference;
 import com.jld.base.model.vo.ModelAttribute;
@@ -56,5 +60,41 @@ public class DashboardService {
 		}
 		
 		return userDescription;
+	}
+	
+	@Transactional
+	public void setUserProfile(UserProfileForm form) {
+		
+		// Update user information:
+		User user = userDao.findUserByField("username", form.getUsername());
+		user.setEmail(form.getEmail());
+		user.setName(form.getName());
+		user.setSurname1(form.getSurname1());
+		user.setSurname2(form.getSurname2());
+		
+		// Update user profile picture:
+		if(!StringUtils.isEmpty(form.getImageUrl())) {		
+			String[] tokens = form.getImageUrl().split("\\.(?=[^\\.]+$)");
+			Picture newProfilePicture = null;
+			List<Picture> userPictures = user.getPictures();
+			if(userPictures.size() > 0) {
+				for(Picture pic: userPictures) {
+					if(pic.getFilekey().equals(tokens[0]) && pic.getFileextension().equals(tokens[1])) {
+						newProfilePicture = pic;
+						break;
+					}
+				}
+			}
+			if(newProfilePicture != null) {
+				user.getUserpreferences().get(0).setPicture(newProfilePicture);
+			}
+			else {
+				// TODO: Throw exception (picture not found for the user)
+				
+			}
+		}
+		
+		// Update user:
+		userDao.update(user);
 	}
 }

@@ -124,19 +124,19 @@ public class UserDao extends AbstractJpaDAO<User> {
 		return Integer.valueOf(query.getSingleResult().toString());
 	}
 
-	public Long countUserByField(String fieldName, String fieldValue) {
-		String sql = "SELECT COUNT(u.iduser) FROM User u WHERE u." + fieldName + "='" + fieldValue + "'";
-		
-		Query query = this.entityManager.createQuery(sql, Long.class);
-		
-		return (Long) query.getSingleResult();
-	}
-
 	public User findUserByField(String fieldName, String fieldValue) {
 		String sql = "SELECT u from User u WHERE u." + fieldName + "='" + fieldValue + "'";
 		
 		Query query = this.entityManager.createQuery(sql, User.class);
 		
 		return (User) query.getSingleResult();
+	}
+
+	public Long countUserByField(String fieldName, String fieldValue) {
+		String sql = "SELECT COUNT(u.iduser) FROM User u WHERE u." + fieldName + "='" + fieldValue + "'";
+		
+		Query query = this.entityManager.createQuery(sql, Long.class);
+		
+		return (Long) query.getSingleResult();
 	}
 }

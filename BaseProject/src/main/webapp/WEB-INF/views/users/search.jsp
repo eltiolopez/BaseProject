@@ -6,6 +6,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="baseproject" uri="http://com.jld.base/tags" %>
 
+<spring:theme code="style" var="styleName" />
+
 <!-- <div id="central_column" xmlns:jsp="http://java.sun.com/JSP/Page"> -->
 <div id="central_column" class="col-lg-middle col-md-middle col-sm-middle col-xs-middle" xmlns:jsp="http://java.sun.com/JSP/Page">
 
@@ -116,10 +118,20 @@
 										<spring:url var="remove_url" value="delete">
 											<baseproject:encryptedparam name="userid" value="${user.iduser}" />	
 										</spring:url>
-   										<a href="#" style="text-decoration: none" data-href="${remove_url}" data-toggle="modal" data-target="#confirm-delete">
-											<spring:url var="imgRemove" value="/resources/images/trash_small.png" />
-											<img class="option" src="${imgRemove}" alt="Remove" />
-   										</a>
+										<c:choose>
+											<c:when test="${styleName=='Bootstrap'}">
+		   										<a href="#" style="text-decoration: none" data-href="${remove_url}" data-toggle="modal" data-target="#confirm-delete">
+													<spring:url var="imgRemove" value="/resources/images/trash_small.png" />
+													<img class="option" src="${imgRemove}" alt="Remove" />
+		   										</a>
+	   										</c:when>
+		   									<c:otherwise>
+		   										<a href="${remove_url}" style="text-decoration: none">
+													<spring:url var="imgRemove" value="/resources/images/trash_small.png" />
+													<img class="option" src="${imgRemove}" alt="Remove" />
+		   										</a>
+		   									</c:otherwise>
+	   									</c:choose>
 									</td>
 								</tr>
 							</c:forEach>
@@ -144,34 +156,36 @@
 
 
 
+<c:if test="${styleName=='Bootstrap'}">
 
-
-<style>
-	.modal {
-	   top: 50px;
-	   z-index: 10000;
-	}
-</style>
-
-
-
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
-			</div>
-			<div class="modal-body">
-				<p>The user will be permanently removed.</p>
-				<p>Do you want to proceed?</p>
-				<p class="debug-url"/>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<a class="btn btn-danger btn-ok" role="button">Delete</a>
+	<style>
+		.modal {
+		   top: 50px;
+		   z-index: 10000;
+		}
+	</style>
+	
+	
+	
+	<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+				</div>
+				<div class="modal-body">
+					<p>The user will be permanently removed.</p>
+					<p>Do you want to proceed?</p>
+					<p class="debug-url"/>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<a class="btn btn-danger btn-ok" role="button">Delete</a>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+	
+</c:if>
 

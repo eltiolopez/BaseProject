@@ -2,6 +2,8 @@ package com.jld.base.controller;
 
 import java.util.Collection;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jld.base.core.security.UserPreferences;
 import com.jld.base.form.PictureAddForm;
 import com.jld.base.form.UserProfileForm;
 import com.jld.base.model.Picture;
@@ -26,6 +33,8 @@ import com.jld.base.pagination.PaginationResultInfo;
 import com.jld.base.pojo.UserDescription;
 import com.jld.base.service.DashboardService;
 import com.jld.base.service.PictureService;
+import com.jld.base.service.UserService;
+import com.jld.base.validator.UserProfileFormValidator;
 
 @Controller
 @RequestMapping(value={"/{userName}"})
@@ -36,8 +45,20 @@ public class DashboardController {
 	
 	private static final Logger logger = Logger.getLogger(DashboardController.class);
 	
+	/* The following code is used for customized Form validation. */
+	@Autowired
+	private UserProfileFormValidator userProfileValidator;
+	
+	@InitBinder("userProfileForm")
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(userProfileValidator);
+    }
+	
 	@Autowired
 	private DashboardService dashboardService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired
 	private PictureService pictureService;
@@ -52,7 +73,7 @@ public class DashboardController {
 		
 		// No root users are not allowed to see other user's profile:
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		org.springframework.security.core.userdetails.User loguedInUser = (org.springframework.security.core.userdetails.User)authentication.getPrincipal();
+		com.jld.base.core.security.User loguedInUser = (com.jld.base.core.security.User) authentication.getPrincipal();
 		Collection<GrantedAuthority> userRoles = loguedInUser.getAuthorities();
 		
 		if(!userRoles.contains(new SimpleGrantedAuthority("ROLE_ADMIN")) && !loguedInUser.getUsername().equalsIgnoreCase(userName)) {
@@ -63,7 +84,7 @@ public class DashboardController {
 		else {
 			
 			UserDescription userDescription = dashboardService.getUserInfoByUsername(userName);
-			form.setUserid(userDescription.getUserid());
+			//form.setUserid(userDescription.getUserid());
 			form.setUsername(userDescription.getUsername());
 			form.setEmail(userDescription.getEmail());
 			form.setName(userDescription.getName());
@@ -105,12 +126,49 @@ public class DashboardController {
 	}
 	
 	@RequestMapping(value="/profile", method=RequestMethod.POST)
-	public ModelAndView setUserProfile(@PathVariable("userName") String userName) {
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("redirect: /dashboard/profile");
+	public String setUserProfile(
+			@PathVariable("userName") String userName,
+			@Valid @ModelAttribute("userProfileForm") UserProfileForm form,
+			BindingResult result,
+			RedirectAttributes redirectAttributes) {
 		
+
 		
-		return mav;
+		// No root users are not allowed to see other user's profile:
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		com.jld.base.core.security.User loguedInUser = (com.jld.base.core.security.User) authentication.getPrincipal();
+		Collection<GrantedAuthority> userRoles = loguedInUser.getAuthorities();
+		
+		if(!userRoles.contains(new SimpleGrantedAuthority("ROLE_ADMIN")) && !loguedInUser.getUsername().equalsIgnoreCase(userName)) {
+			
+			//mav.addObject("error", "not_allowed");
+			throw new AccessDeniedException("You don't have access to this resource.");
+		}
+		else {
+			try {
+				form.setUsername(userName);		// Just for security.
+				dashboardService.setUserProfile(form);
+				
+				// Update loaded user preferences only if the profile belong to logged in user:
+				if(loguedInUser.getUsername().equalsIgnoreCase(userName)) {
+					UserPreferences userPreferences = userService.getUserPreferences(userName);
+					loguedInUser.setUserPreferences(userPreferences);
+				}
+				
+				redirectAttributes.addFlashAttribute("updateOk", true);
+				
+				logger.debug("User updated correctly");
+			} catch(Exception e) {
+				logger.error(e);
+				
+				redirectAttributes.addFlashAttribute("updateError", true);
+			}
+		}
+
+
+		redirectAttributes.addFlashAttribute("updateOk", true);
+		
+		return "redirect:/" + userName + "/profile";
 	}
 	
 	@RequestMapping(value="/images", method=RequestMethod.GET)

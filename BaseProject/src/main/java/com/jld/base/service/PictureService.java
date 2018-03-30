@@ -2,6 +2,7 @@ package com.jld.base.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,9 +94,12 @@ public class PictureService {
 	public File fetchPictureFromServer(String repositoryPath, String pictureid, String pictureextension) throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		com.jld.base.core.security.User loguedInUser = (com.jld.base.core.security.User) authentication.getPrincipal();
+		Collection<GrantedAuthority> userRoles = loguedInUser.getAuthorities();
 		
 		ModelFilter modelFilter = new ModelFilter();
-		modelFilter.getAttributes().add(new ModelAttribute("user.username", loguedInUser.getUsername(), Constants.MODEL_OPERATION_EQUAL));
+		if(!userRoles.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {		// Not-Admin users are able to see only its Pictures.
+			modelFilter.getAttributes().add(new ModelAttribute("user.username", loguedInUser.getUsername(), Constants.MODEL_OPERATION_EQUAL));
+		}
 		modelFilter.getAttributes().add(new ModelAttribute("filekey", pictureid, Constants.MODEL_OPERATION_EQUAL));
 		if(StringUtils.isNotEmpty(pictureextension)) {
 			modelFilter.getAttributes().add(new ModelAttribute("fileextension", pictureextension, Constants.MODEL_OPERATION_EQUAL));

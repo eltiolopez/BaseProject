@@ -2,6 +2,7 @@ package com.jld.base.validator;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -9,18 +10,14 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.jld.base.dao.UserDao;
-import com.jld.base.dao.UsergroupDao;
-import com.jld.base.form.UserCreateForm;
+import com.jld.base.form.UserProfileForm;
 import com.jld.base.model.User;
 
 @Component
-public class UserUpdateFormValidator implements Validator {
+public class UserProfileFormValidator implements Validator {
 	
 	@Autowired
 	private UserDao userDao;
-	
-	@Autowired
-	private UsergroupDao usergroupDao;
 	
 	private Pattern pattern;
 
@@ -28,7 +25,7 @@ public class UserUpdateFormValidator implements Validator {
 		"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	
-	public UserUpdateFormValidator() {
+	public UserProfileFormValidator() {
 		pattern = Pattern.compile(EMAIL_PATTERN);
 	}
 
@@ -37,13 +34,13 @@ public class UserUpdateFormValidator implements Validator {
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
 	 */
 	public boolean supports(Class<?> paramClass) {
-		return UserCreateForm.class.equals(paramClass);
+		return UserProfileForm.class.equals(paramClass);
 	}
 
 	public void validate(Object obj, Errors errors) {
-		UserCreateForm form = (UserCreateForm) obj;
+		UserProfileForm form = (UserProfileForm) obj;
 		
-		User user = userDao.findOne(form.getUserid());
+		User user = userDao.findUserByField("username", form.getUsername());
 		
 		// Validation of field 'UserName':
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "validation.username.isEmpty");
@@ -62,17 +59,11 @@ public class UserUpdateFormValidator implements Validator {
 			}
 		}
 		
-		// Validación del campo Grupo:
-		if(form.getGroup() == null) {
-			errors.rejectValue("group", "validation.group.isEmpty");
-		}
-		else {
-			try {
-				if(usergroupDao.findOne(form.getGroup()) == null) {
-					errors.rejectValue("group", "validation.group.notValidValue");
-				}				
-			} catch(Exception e) {
-				errors.rejectValue("group", "validation.group.notValidValue");
+		// Validation of field 'Image':
+		if(!StringUtils.isEmpty(form.getImageUrl())) {		
+			String[] tokens = form.getImageUrl().split("\\.(?=[^\\.]+$)");
+			if(StringUtils.isEmpty(tokens[0]) || StringUtils.isEmpty(tokens[1])) {
+				errors.reject("imageUrl", "validation.picture.invalidFormat");
 			}
 		}
 	}
