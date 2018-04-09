@@ -2,11 +2,15 @@
 	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:cache="http://www.springframework.org/schema/cache"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 						http://www.springframework.org/schema/context
 						http://www.springframework.org/schema/context/spring-context-4.0.xsd
+						http://www.springframework.org/schema/cache
+						http://www.springframework.org/schema/cache/spring-cache.xsd
 						http://www.springframework.org/schema/tx
 						http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
@@ -23,6 +27,19 @@
     
     <context:component-scan base-package="com.jld.base.service" />	<!-- This scan must be done here to make Spring takes both @Service and @Transaction annotations -->
     <context:component-scan base-package="com.jld.base.dao" />
+	
+	<!-- Enables support for Spring cache (i.e. @Cacheable) -->
+	<!-- See https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/cache.html -->
+	<cache:annotation-driven cache-manager="cacheManager" />
+    
+    <!-- Generic cache manager -->
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+    	<property name="caches">
+    		<set>
+    			<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" p:name="groups"/>
+    		</set>
+    	</property>
+    </bean>
 	
 	
 	

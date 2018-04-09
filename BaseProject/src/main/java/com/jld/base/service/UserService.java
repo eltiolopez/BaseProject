@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -50,11 +51,6 @@ public class UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
-	public List<User> getUserList() {
-		List<User> userList = userDao.findAll();
-		return userList;
-	}
-	
 	public PaginationResultInfo<User> searchUsersPaginated(UserSearchForm form) {
 		PaginationResultInfo<User> resultInfo = new PaginationResultInfo<User>();
 
@@ -78,6 +74,7 @@ public class UserService {
 		return resultInfo;
 	}
 
+	@Cacheable("groups")
 	public List<Usergroup> getAllUsergroups() {
 		return usergroupDao.findAll();
 	}

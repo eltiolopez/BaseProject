@@ -1,15 +1,22 @@
 <beans:beans 
 	xmlns="http://www.springframework.org/schema/security"
 	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans  
 						http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
 						http://www.springframework.org/schema/security  
-						http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+						http://www.springframework.org/schema/security/spring-security-4.2.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 	<beans:description>
 		Configuration of Security Context.
 	</beans:description>
+	
+	
+	
+	<context:component-scan base-package="com.jld.base.core.security" />
 
 
 
@@ -21,32 +28,25 @@
 		
 		<access-denied-handler error-page="/accessDenied" />
 		
-		<intercept-url pattern="/resources/**" access="permitAll" />
-		<intercept-url pattern="/index" access="permitAll" />
-		<intercept-url pattern="/spring" access="permitAll" />
-		<intercept-url pattern="/hibernate" access="permitAll" />
-		<intercept-url pattern="/mysql" access="permitAll" />
-		<intercept-url pattern="/guestbook/create" access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
-		<intercept-url pattern="/guestbook/search" access="permitAll" />
-		<intercept-url pattern="/users/**" access="hasRole('ROLE_ADMIN')" />
-		<intercept-url pattern="/pictures" access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
-		<intercept-url pattern="/pictures/**" access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
-		<intercept-url pattern="/profile/**" access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
-		<intercept-url pattern="/author/**" access="permitAll" />
+		<intercept-url pattern="/resources/**"      access="permitAll" />
+		<intercept-url pattern="/index"             access="permitAll" />
+		<intercept-url pattern="/spring"            access="permitAll" />
+		<intercept-url pattern="/hibernate"         access="permitAll" />
+		<intercept-url pattern="/mysql"             access="permitAll" />
+		<intercept-url pattern="/frontend"          access="permitAll" />
+		<intercept-url pattern="/guestbook/create"  access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/guestbook/search"  access="permitAll" />
+		<intercept-url pattern="/users/**"          access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/pictures"          access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/pictures/**"       access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/profile/**"        access="hasAnyRole('ROLE_BASIC', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/author/**"         access="permitAll" />
+		<intercept-url pattern="/{user}/**"         access="hasRole('ROLE_ADMIN') or @webSecurity.checkLoggedInUser(authentication,#user)" />
 
 		<csrf disabled="true" />
 	</http>
 
 
-	<!-- <authentication-manager>
-		<authentication-provider>
-			<user-service>
-				<user name="java2blog" password="java123" authorities="ROLE_ADMIN" />
-				<user name="arpit" password="arpit123" authorities="ROLE_ADMIN" />
-				<user name="root" password="password" authorities="ROLE_ADMIN" />
-			</user-service>
-		</authentication-provider>
-	</authentication-manager> -->
 	
 	<authentication-manager>
 		<authentication-provider user-service-ref="customUserDetailsService">
@@ -59,6 +59,15 @@
 	
 	<beans:bean id="customUserDetailsService" class="com.jld.base.service.CustomUserDetailsService" />
 	
+	<!-- <authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="java2blog" password="java123" authorities="ROLE_ADMIN" />
+				<user name="arpit" password="arpit123" authorities="ROLE_ADMIN" />
+				<user name="root" password="password" authorities="ROLE_ADMIN" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager> -->
 	
 	<!-- Enable Spring Method level Security with @PreAuthorize, @PostAuthorize, @Secured and Spring EL expressions -->
 	<!-- <global-method-security secured-annotations="enabled" /> -->

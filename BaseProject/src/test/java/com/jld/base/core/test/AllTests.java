@@ -5,7 +5,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TestEncryption.class })
+@SuiteClasses({ 
+	TestEncryption.class,
+	TestUtils.class,
+	TestServices.class})
 public class AllTests {
 
 }

@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>3.8.1</junit.version>
 		<spring.version>4.2.4.RELEASE</spring.version>
-		<spring-security.version>4.0.3.RELEASE</spring-security.version>
+		<spring-security.version>4.2.0.RELEASE</spring-security.version>
 		<spring-data-jpa.version>1.9.2.RELEASE</spring-data-jpa.version>
 		<hibernate.version>5.0.7.Final</hibernate.version>
 		<mysql.version>5.1.38</mysql.version>
@@ -51,6 +51,13 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-test</artifactId>
+		    <version>${spring.version}</version>
+		    <scope>test</scope>
 		</dependency>
 
 		<!-- Spring Security dependencies -->

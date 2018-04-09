@@ -1,7 +1,5 @@
 package com.jld.base.exception;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -40,27 +38,27 @@ public class GlobalDefaultHttpErrorController {
  
         switch (httpErrorCode) {
             case 400: {
-                errorMsg = "Http Error Code: 400. Bad Request";
+                errorMsg = "Bad Request";
                 break;
             }
             case 401: {
-                errorMsg = "Http Error Code: 401. Unauthorized";
+                errorMsg = "Unauthorized";
                 break;
             }
             case 404: {
-                errorMsg = "Http Error Code: 404. Resource not found";
+                errorMsg = "Resource not found";
                 break;
             }
             case 500: {
-                errorMsg = "Http Error Code: 500. Internal Server Error";
+                errorMsg = "Internal Server Error";
                 break;
             }
         }
 
-        mav.addObject("datetime", new Date());
+        //mav.addObject("datetime", new Date());
         mav.addObject("numHttpError", httpErrorCode);
         mav.addObject("errorMsg", errorMsg);
-        mav.addObject("url", httpRequest.getRequestURL());
+        //mav.addObject("url", httpRequest.getRequestURL());
         return mav;
     }
     
@@ -76,7 +74,8 @@ public class GlobalDefaultHttpErrorController {
         
         String starkTrace = ExceptionUtils.getStackTrace(throwable);
         logger.error("Unknown exception: " + starkTrace);
-        
+
+        //mav.addObject("datetime", new Date());
         mav.addObject("numHttpError", httpErrorCode);
         mav.addObject("errorMsg", errorMsg + exceptionName);
         mav.addObject("starkTrace", starkTrace);

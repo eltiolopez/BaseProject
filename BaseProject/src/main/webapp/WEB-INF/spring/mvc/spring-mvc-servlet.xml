@@ -17,7 +17,7 @@
 
 
  
- 	<!-- Declares explicit support for annotation-driven MVC controllers (i.e. @RequestMapping, @Controller, ) -->
+ 	<!-- Declares explicit support for annotation-driven MVC controllers (i.e. @RequestMapping, @Controller, etc. ) -->
  	<!-- as well as adding support for declarative validation via @Valid and message body marshalling with @RequestBody/ResponseBody -->
 	<mvc:annotation-driven />
 	
@@ -83,8 +83,9 @@
     <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
     
     <!-- store preferred language configuration in a cookie -->
-    <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver" id="localeResolver" p:cookieName="locale" />
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" p:cookieName="locale" />
     
     <!-- Store preferred theme configuration in a cookie -->
-    <bean class="org.springframework.web.servlet.theme.CookieThemeResolver" id="themeResolver" p:cookieName="theme" p:defaultThemeName="default" />
+    <bean id="themeResolver" class="org.springframework.web.servlet.theme.CookieThemeResolver" p:cookieName="theme" p:defaultThemeName="default" />
+    
 </beans>
