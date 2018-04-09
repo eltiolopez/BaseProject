@@ -29,4 +29,15 @@
 
 	<h4><spring:message code="message.spring.text3.subtitle" htmlEscape="false" /></h4>
 	
+	<spring:message code="message.spring.text3.paragraph1" htmlEscape="false" />
+	<spring:message code="message.spring.text3.paragraph2" htmlEscape="false" />
+	<spring:message code="message.spring.text3.paragraph3" htmlEscape="false" />
+	<spring:message code="message.spring.text3.paragraph4" htmlEscape="false" />
+	<spring:message code="message.spring.text3.paragraph5" htmlEscape="false" />
+	
+	
+	<h4><spring:message code="message.spring.text4.subtitle" htmlEscape="false" /></h4>
+	<spring:message code="message.spring.text4.paragraph1" htmlEscape="false" />
+	<spring:message code="message.spring.text4.paragraph2" htmlEscape="false" />
+	
 </div>

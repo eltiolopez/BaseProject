@@ -8,10 +8,9 @@
 
 	<h2><spring:message code="message.hibernate.title" htmlEscape="false" /></h2>
 	
-	<p><spring:message code="message.hibernate.text1.paragraph1" htmlEscape="false" /></p>
-	
-	<p><spring:message code="message.hibernate.text1.paragraph2" htmlEscape="false" /></p>
-	
+	<p><spring:message code="message.hibernate.text1.paragraph1" htmlEscape="false" /></p>	
+	<p><spring:message code="message.hibernate.text1.paragraph2" htmlEscape="false" /></p>	
 	<p><spring:message code="message.hibernate.text1.paragraph3" htmlEscape="false" /></p>
+	<p><spring:message code="message.hibernate.text1.paragraph4" htmlEscape="false" /></p>
 	
 </div>

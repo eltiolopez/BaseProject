@@ -11,12 +11,14 @@ import com.jld.base.core.utils.Constants;
 import com.jld.base.dao.UserDao;
 import com.jld.base.dao.UserpreferenceDao;
 import com.jld.base.form.UserProfileForm;
+import com.jld.base.form.UserSettingsForm;
 import com.jld.base.model.Picture;
 import com.jld.base.model.User;
 import com.jld.base.model.Userpreference;
 import com.jld.base.model.vo.ModelAttribute;
 import com.jld.base.model.vo.ModelFilter;
 import com.jld.base.pojo.UserDescription;
+import com.jld.base.pojo.UserSettings;
 
 @Service
 @Transactional
@@ -94,6 +96,34 @@ public class DashboardService {
 			}
 		}
 		
+		// Update user:
+		userDao.update(user);
+	}
+
+	public UserSettings getUserSettings(String userName) {
+		
+		UserSettings userSettings = new UserSettings();
+		
+		User user = userDao.findUserByField("username", userName);
+		
+		if(user != null) {
+			userSettings.setUsername(userName);
+			userSettings.setNumResultsInPage(user.getUserpreferences().get(0).getNumresultsinpage());
+			//userSettings.setOrderByCode(user.getUserpreferences().get(0).getOrderby());
+			userSettings.setOrderByCode("NAME");
+		}
+
+		return userSettings;
+	}
+	
+	@Transactional
+	public void setUserSettings(UserSettingsForm form) {
+		
+		// Update user information:
+		User user = userDao.findUserByField("username", form.getUsername());
+		user.getUserpreferences().get(0).setNumresultsinpage(form.getNumResultsInPage());
+		//user.getUserpreferences().get(0).setOrderby(form.getOrderBy());
+
 		// Update user:
 		userDao.update(user);
 	}

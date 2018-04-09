@@ -12,6 +12,7 @@ public class AESencrypter {
 			new byte[] { 'Z', '1', 'A', '5', 'e', '0', 'r', 'S', 'o', 'p', 'A','5', 'x', '2', 'P', 'F' };
 
 
+	@SuppressWarnings("restriction")
 	public static String encrypt(String Data) throws Exception {
         Key key = generateKey();
         Cipher c = Cipher.getInstance(ALGO);
@@ -21,7 +22,8 @@ public class AESencrypter {
         return encryptedValue;
     }
 
-    public static String decrypt(String encryptedData) throws Exception {
+    @SuppressWarnings("restriction")
+	public static String decrypt(String encryptedData) throws Exception {
         Key key = generateKey();
         Cipher c = Cipher.getInstance(ALGO);
         c.init(Cipher.DECRYPT_MODE, key);

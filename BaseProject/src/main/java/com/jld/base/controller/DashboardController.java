@@ -1,17 +1,12 @@
 package com.jld.base.controller;
 
-import java.util.Collection;
-
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,13 +23,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.jld.base.core.security.UserPreferences;
 import com.jld.base.form.PictureAddForm;
 import com.jld.base.form.UserProfileForm;
+import com.jld.base.form.UserSettingsForm;
 import com.jld.base.model.Picture;
 import com.jld.base.pagination.PaginationResultInfo;
 import com.jld.base.pojo.UserDescription;
+import com.jld.base.pojo.UserSettings;
 import com.jld.base.service.DashboardService;
 import com.jld.base.service.PictureService;
 import com.jld.base.service.UserService;
 import com.jld.base.validator.UserProfileFormValidator;
+import com.jld.base.validator.UserSettingsFormValidator;
 
 @Controller
 @RequestMapping(value={"/{userName}"})
@@ -45,15 +43,6 @@ public class DashboardController {
 	
 	private static final Logger logger = Logger.getLogger(DashboardController.class);
 	
-	/* The following code is used for customized Form validation. */
-	@Autowired
-	private UserProfileFormValidator userProfileValidator;
-	
-	@InitBinder("userProfileForm")
-    private void initBinder(WebDataBinder binder) {
-        binder.setValidator(userProfileValidator);
-    }
-	
 	@Autowired
 	private DashboardService dashboardService;
 	
@@ -63,6 +52,23 @@ public class DashboardController {
 	@Autowired
 	private PictureService pictureService;
 	
+	/* The following code is used for customized Form validation. */	
+	@Autowired
+	private UserProfileFormValidator userProfileValidator;
+	
+	@Autowired
+	private UserSettingsFormValidator userSettinsFormValidator;
+	
+	@InitBinder("userProfileForm")
+    private void initBinderProfile(WebDataBinder binder) {
+        binder.setValidator(userProfileValidator);
+    }
+	
+	@InitBinder("userSettingsForm")
+    private void initBinderSettings(WebDataBinder binder) {
+        binder.setValidator(userSettinsFormValidator);
+    }
+	
 	@RequestMapping(value="/profile", method=RequestMethod.GET)
 	public ModelAndView getUserProfile(ModelAndView mav, 
 			@PathVariable("userName") String userName, 
@@ -70,38 +76,26 @@ public class DashboardController {
 			@ModelAttribute("userProfileForm") UserProfileForm form) {
 
 		mav.setViewName("dashboard/profile");
-		
-		// No root users are not allowed to see other user's profile:
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		com.jld.base.core.security.User loguedInUser = (com.jld.base.core.security.User) authentication.getPrincipal();
-		Collection<GrantedAuthority> userRoles = loguedInUser.getAuthorities();
-		
-		if(!userRoles.contains(new SimpleGrantedAuthority("ROLE_ADMIN")) && !loguedInUser.getUsername().equalsIgnoreCase(userName)) {
-			
-			//mav.addObject("error", "not_allowed");
-			throw new AccessDeniedException("You don't have access to this resource.");
-		}
-		else {
-			
-			UserDescription userDescription = dashboardService.getUserInfoByUsername(userName);
-			//form.setUserid(userDescription.getUserid());
-			form.setUsername(userDescription.getUsername());
-			form.setEmail(userDescription.getEmail());
-			form.setName(userDescription.getName());
-			form.setSurname1(userDescription.getSurname1());
-			form.setSurname2(userDescription.getSurname2());
-			if(!StringUtils.isEmpty(profilePicture)){
-				if(isValidPicture(profilePicture)) {
-					form.setImageUrl(profilePicture);
-				}
-				else {					
-					logger.debug("Invalid picture received: " + profilePicture);
-					form.setImageUrl(userDescription.getProfilePicture());
-				}
+
+		// User profile:
+		UserDescription userDescription = dashboardService.getUserInfoByUsername(userName);
+		//form.setUserid(userDescription.getUserid());
+		form.setUsername(userDescription.getUsername());
+		form.setEmail(userDescription.getEmail());
+		form.setName(userDescription.getName());
+		form.setSurname1(userDescription.getSurname1());
+		form.setSurname2(userDescription.getSurname2());
+		if(!StringUtils.isEmpty(profilePicture)){
+			if(isValidPicture(profilePicture)) {
+				form.setImageUrl(profilePicture);
 			}
-			else {
+			else {					
+				logger.debug("Invalid picture received: " + profilePicture);
 				form.setImageUrl(userDescription.getProfilePicture());
 			}
+		}
+		else {
+			form.setImageUrl(userDescription.getProfilePicture());
 		}
 		
 		mav.addObject("userProfileForm", form);
@@ -131,38 +125,24 @@ public class DashboardController {
 			@Valid @ModelAttribute("userProfileForm") UserProfileForm form,
 			BindingResult result,
 			RedirectAttributes redirectAttributes) {
-		
 
-		
-		// No root users are not allowed to see other user's profile:
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		com.jld.base.core.security.User loguedInUser = (com.jld.base.core.security.User) authentication.getPrincipal();
-		Collection<GrantedAuthority> userRoles = loguedInUser.getAuthorities();
-		
-		if(!userRoles.contains(new SimpleGrantedAuthority("ROLE_ADMIN")) && !loguedInUser.getUsername().equalsIgnoreCase(userName)) {
+		try {
+			form.setUsername(userName);		// Just for security.
+			dashboardService.setUserProfile(form);
 			
-			//mav.addObject("error", "not_allowed");
-			throw new AccessDeniedException("You don't have access to this resource.");
-		}
-		else {
-			try {
-				form.setUsername(userName);		// Just for security.
-				dashboardService.setUserProfile(form);
+			// Refresh user preferences:
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			com.jld.base.core.security.User loguedInUser = (com.jld.base.core.security.User) authentication.getPrincipal();
+			UserPreferences userPreferences = userService.getUserPreferences(userName);
+			loguedInUser.setUserPreferences(userPreferences);
 				
-				// Update loaded user preferences only if the profile belong to logged in user:
-				if(loguedInUser.getUsername().equalsIgnoreCase(userName)) {
-					UserPreferences userPreferences = userService.getUserPreferences(userName);
-					loguedInUser.setUserPreferences(userPreferences);
-				}
-				
-				redirectAttributes.addFlashAttribute("updateOk", true);
-				
-				logger.debug("User updated correctly");
-			} catch(Exception e) {
-				logger.error(e);
-				
-				redirectAttributes.addFlashAttribute("updateError", true);
-			}
+			redirectAttributes.addFlashAttribute("updateOk", true);
+			
+			logger.debug("User updated correctly");
+		} catch(Exception e) {
+			logger.error(e);
+			
+			redirectAttributes.addFlashAttribute("updateError", true);
 		}
 
 
@@ -190,22 +170,51 @@ public class DashboardController {
 		mav.addObject("pictureAddForm", form);
 		mav.addObject("optionSelectOnly", true);
 		
-		// List of messages:
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		com.jld.base.core.security.User loguedInUser = (com.jld.base.core.security.User) authentication.getPrincipal();
-        
-		PaginationResultInfo<Picture> resultInfo = pictureService.getUserPictures(loguedInUser.getUsername());
+		// List of pictures:        
+		PaginationResultInfo<Picture> resultInfo = pictureService.getUserPictures(userName);
 		mav.addObject("resultAndMetainfo", resultInfo);
 		
 		return mav;
 	}
 	
 	@RequestMapping(value="/settings", method=RequestMethod.GET)
-	public ModelAndView getUserSettings() {
-		ModelAndView mav = new ModelAndView();
+	public ModelAndView getUserSettings(ModelAndView mav,
+			@PathVariable("userName") String userName,
+			@ModelAttribute("userSettingsForm") UserSettingsForm form) {
+		
 		mav.setViewName("dashboard/settings");
+
+		// User settings:
+		UserSettings userSettings = dashboardService.getUserSettings(userName);
+		form.setUsername(userSettings.getUsername());
+		form.setNumResultsInPage(userSettings.getNumResultsInPage());
+		form.setOrderBy(userSettings.getOrderByCode());
+		
+		mav.addObject("userSettingsForm", form);		
 		
 		return mav;
+	}
+	
+	@RequestMapping(value="/settings", method=RequestMethod.POST)
+	public String setUserSettings(ModelAndView mav,
+			@PathVariable("userName") String userName,
+			@ModelAttribute("userSettingsForm") UserSettingsForm form,
+			//BindingResult result,
+			RedirectAttributes redirectAttributes) {
+		
+		try {
+			form.setUsername(userName);		// Just for security.
+			dashboardService.setUserSettings(form);
+		} catch(Exception e) {
+			logger.error(e);
+			
+			redirectAttributes.addFlashAttribute("updateError", true);
+		}
+		
+		
+		redirectAttributes.addFlashAttribute("updateOk", true);
+		
+		return "redirect:/" + userName + "/settings";
 	}
 	
 	@RequestMapping(value="/statistics", method=RequestMethod.GET)
