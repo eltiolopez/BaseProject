@@ -22,6 +22,7 @@ import com.jld.base.core.utils.RandomAlphaNumericString;
 import com.jld.base.dao.PictureDao;
 import com.jld.base.dao.UserDao;
 import com.jld.base.exception.EntityNotFoundException;
+import com.jld.base.exception.ExceptionErrors;
 import com.jld.base.model.Picture;
 import com.jld.base.model.User;
 import com.jld.base.model.vo.ModelAttribute;
@@ -106,7 +107,7 @@ public class PictureService {
 		}
 		List<Picture> listPictures = pictureDao.findList(modelFilter);
 		if(listPictures == null || listPictures.size() == 0) {
-			throw new EntityNotFoundException("ERROR_ITEM_NOT_FOUND", "ERROR_ITEM_NOT_FOUND");
+			throw new EntityNotFoundException(ExceptionErrors.ERROR_1003.getCode(), ExceptionErrors.ERROR_1003.getMessage());
 		}
 		
 		String path = repositoryPath + File.separator + listPictures.get(0).getFilepath() + File.separator + pictureid + "." + listPictures.get(0).getFileextension();

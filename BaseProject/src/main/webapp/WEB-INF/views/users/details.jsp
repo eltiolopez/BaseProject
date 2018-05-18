@@ -85,10 +85,10 @@
 			<div class="row">
 				<span class="col_100 col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
 					<spring:message var="msgBack" code="message.common.button.back" htmlEscape="false" />
-					<input type="button" value="${msgBack}" />
+					<input type="button" class="btn btn-default btn-sm" value="${msgBack}" />
 					
 					<spring:message var="msgSubmit" code="message.common.button.save" htmlEscape="false" />
-					<input type="submit" value="${msgSubmit}" />
+					<input type="submit" class="btn btn-default btn-sm" value="${msgSubmit}" />
 				</span>
 			</div>
 			

@@ -20,7 +20,9 @@ import com.jld.base.dao.PictureDao;
 import com.jld.base.dao.UserDao;
 import com.jld.base.dao.UsergroupDao;
 import com.jld.base.dao.UserpreferenceDao;
+import com.jld.base.exception.EntityAlreadyExistsException;
 import com.jld.base.exception.EntityNotFoundException;
+import com.jld.base.exception.ExceptionErrors;
 import com.jld.base.form.UserCreateForm;
 import com.jld.base.form.UserSearchForm;
 import com.jld.base.model.Picture;
@@ -97,8 +99,7 @@ public class UserService {
 		ModelFilter modelFilter = new ModelFilter();
 		modelFilter.getAttributes().add(new ModelAttribute("username", form.getUsername(), Constants.MODEL_OPERATION_EQUAL));
 		if(userDao.findCount(modelFilter) > 0) {
-			// TODO: User already exists
-			
+			throw new EntityAlreadyExistsException(ExceptionErrors.ERROR_1012.getCode(), ExceptionErrors.ERROR_1012.getMessage());			
 		}
 		else {
 			
@@ -168,8 +169,7 @@ public class UserService {
 		try {
 			User user = userDao.findOne(idUser);
 			if(user == null) {
-				// TODO: Error - User not found.
-				throw new EntityNotFoundException("ERROR_ITEM_NOT_FOUND", "ERROR_ITEM_NOT_FOUND");
+				throw new EntityNotFoundException(ExceptionErrors.ERROR_1002.getCode(), ExceptionErrors.ERROR_1002.getMessage());
 			}
 			
 			// Personal directory path:

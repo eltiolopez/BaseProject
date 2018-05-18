@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.jld.base.core.utils.Constants;
 import com.jld.base.exception.EntityNotFoundException;
+import com.jld.base.exception.ExceptionErrors;
 import com.jld.base.model.vo.ModelAttribute;
 import com.jld.base.model.vo.ModelFilter;
 
@@ -50,7 +51,7 @@ public abstract class AbstractJpaDAO<T extends Serializable> {
     public void deleteById(final Integer entityId) throws Exception {
         final T entity = findOne(entityId);
         if(entity == null) {
-        	throw new EntityNotFoundException("ERROR_ITEM_NOT_FOUND", "ERROR_ITEM_NOT_FOUND");
+        	throw new EntityNotFoundException(ExceptionErrors.ERROR_1001.getCode(), ExceptionErrors.ERROR_1001.getMessage());
         }
         delete(entity);
     }

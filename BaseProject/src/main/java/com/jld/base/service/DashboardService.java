@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jld.base.core.utils.Constants;
 import com.jld.base.dao.UserDao;
 import com.jld.base.dao.UserpreferenceDao;
+import com.jld.base.exception.EntityNotFoundException;
+import com.jld.base.exception.ExceptionErrors;
 import com.jld.base.form.UserProfileForm;
 import com.jld.base.form.UserSettingsForm;
 import com.jld.base.model.Picture;
@@ -65,7 +67,7 @@ public class DashboardService {
 	}
 	
 	@Transactional
-	public void setUserProfile(UserProfileForm form) {
+	public void setUserProfile(UserProfileForm form) throws Exception {
 		
 		// Update user information:
 		User user = userDao.findUserByField("username", form.getUsername());
@@ -91,8 +93,7 @@ public class DashboardService {
 				user.getUserpreferences().get(0).setPicture(newProfilePicture);
 			}
 			else {
-				// TODO: Throw exception (picture not found for the user)
-				
+				throw new EntityNotFoundException(ExceptionErrors.ERROR_1003.getCode(), ExceptionErrors.ERROR_1003.getMessage());
 			}
 		}
 		

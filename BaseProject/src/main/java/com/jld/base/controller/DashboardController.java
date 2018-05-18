@@ -6,8 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.jld.base.core.security.UserPreferences;
 import com.jld.base.form.PictureAddForm;
 import com.jld.base.form.UserProfileForm;
 import com.jld.base.form.UserSettingsForm;
@@ -131,22 +128,18 @@ public class DashboardController {
 			dashboardService.setUserProfile(form);
 			
 			// Refresh user preferences:
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			com.jld.base.core.security.User loguedInUser = (com.jld.base.core.security.User) authentication.getPrincipal();
-			UserPreferences userPreferences = userService.getUserPreferences(userName);
-			loguedInUser.setUserPreferences(userPreferences);
+			userService.refreshUserPreferences();
 				
 			redirectAttributes.addFlashAttribute("updateOk", true);
 			
 			logger.debug("User updated correctly");
+			
+			redirectAttributes.addFlashAttribute("updateOk", true);
 		} catch(Exception e) {
 			logger.error(e);
 			
 			redirectAttributes.addFlashAttribute("updateError", true);
 		}
-
-
-		redirectAttributes.addFlashAttribute("updateOk", true);
 		
 		return "redirect:/" + userName + "/profile";
 	}
@@ -205,14 +198,18 @@ public class DashboardController {
 		try {
 			form.setUsername(userName);		// Just for security.
 			dashboardService.setUserSettings(form);
+			
+			// Refresh user preferences:
+			userService.refreshUserPreferences();
+			
+			redirectAttributes.addFlashAttribute("updateOk", true);
+			
+			logger.debug("User preferences updated correctly");
 		} catch(Exception e) {
 			logger.error(e);
 			
 			redirectAttributes.addFlashAttribute("updateError", true);
 		}
-		
-		
-		redirectAttributes.addFlashAttribute("updateOk", true);
 		
 		return "redirect:/" + userName + "/settings";
 	}

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jld.base.exception.EntityAlreadyExistsException;
 import com.jld.base.exception.EntityNotFoundException;
 import com.jld.base.form.UserCreateForm;
 import com.jld.base.form.UserSearchForm;
@@ -95,8 +96,12 @@ public class UsersController {
 			redirectAttributes.addFlashAttribute("createOk", true);
 			
 			logger.debug("User created correctly");
+		} catch(EntityAlreadyExistsException eaee) {
+			logger.error("Not possible to create the user: " + eaee);
+			
+			redirectAttributes.addFlashAttribute("createError", true);
 		} catch(Exception e) {
-			logger.error(e);
+			logger.error("Not possible to create the user: " + e);
 			
 			redirectAttributes.addFlashAttribute("createError", true);
 		}
